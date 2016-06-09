@@ -20,6 +20,7 @@ class TalkServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
+        $this->setupRoutes();
         $this->setupMigrations();
     }
 
@@ -56,6 +57,16 @@ class TalkServiceProvider extends ServiceProvider
         $this->publishes([
             realpath(__DIR__ . '/../database/migrations/') => database_path('migrations')
         ], 'migrations');
+    }
+
+    /**
+    * Setup Routes to Built-in Controllers
+    */
+    protected function setupRoutes()
+    {
+        if (! $this->app->routesAreCached() && config('talk.use_routes') ) {
+            require __DIR__.'/Http/routes.php';
+        }
     }
 
     /**
